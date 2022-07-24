@@ -1,1 +1,149 @@
+:root {
+    /* WCAG Color Contrast:       #000 */
+    --black: #000;          /*  1.00 */
+    --white: #fff;          /* 21.00 */
+    --blue: #6060ff;        /*  4.61 */
+    --blue-hover: #5050ff;  /*  3.93  */
+    --bg: #000;             /*  1.00 */
+    --fg: #e4e4e4;          /* 16.51 */
+    --gray: #888890;        /*  5.97 */
+    --gray-border: #383840; /*  1.80 */
+    --gray-input: #181820;  /*  1.19 */
+    --radius: .375rem;
+    --border: 1px solid var(--gray-border);
+    --menu-size: 12rem;
+    font-size: 16px; /* Defines 'rem', do not delete */
+}
+
+::selection {
+    color: var(--white);
+    background-color: var(--blue);
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* ----- General ----- */
+body,
+menu,
+input,
+button,
+textarea {
+    all: unset;
+}
+
+body,
+body * {
+    display: flex;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    direction: ltr;
+    touch-action: manipulation;
+    user-select: none;
+    color: var(--fg);
+    background-color: var(--bg);
+    font: 400 15px system-ui, -apple-system, BlinkMacSystemFont, Roboto, 'Segoe UI', Helvetica, Arial, sans-serif;
+    height: 100%;
+}
+
+button {
+    align-items: center;
+}
+
+/* ----- Nav ----- */
+nav {
+    position: fixed;
+    flex-direction: column;
+    width: 100%;
+    height: 3.75rem;
+}
+
+nav > * {
+    overflow: auto hidden;
+    border-bottom: var(--border);
+    height: 1.875rem;
+}
+
+nav button {
+    white-space: pre;
+    height: 100%;
+    padding: 0 .4375rem;
+}
+
+/* --- Navigation --- */
+#nav {
+    width: 100%;
+}
+
+#nav button {
+    color: var(--gray);
+}
+
+/* --- Opened files --- */
+#of {
+    width: calc(100% - var(--menu-size));
+    margin-left: var(--menu-size);
+}
+
+#of button {
+    min-width: fit-content;
+    border-right: var(--border);
+}
+
+/* File icon */
+#of button span {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 1rem;
+    height: 1rem;
+    margin-right: .125rem;
+}
+
+/* File name */
+#of button div {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: var(--menu-size);
+}
+
+/* -- File icons -- */
+.css {background-image: url(i/css.svg)}
+
+/* ----- Menu ----- */
+menu {
+    background-color: var(--bg);
+    border-right: var(--border);
+    min-width: var(--menu-size);
+    height: calc(100% - 1.875rem);
+    margin-top: 1.875rem;
+    z-index: 1;
+}
+
+/* ----- Main ----- */
+main {
+    flex-grow: 1;
+    background-color: #333;
+    height: calc(100% - 3.75rem);
+    margin-top: 3.75rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
