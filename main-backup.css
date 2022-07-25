@@ -28,7 +28,7 @@
 }
 
 ::selection {
-    /* color: var(--white); */
+    color: var(--white);
     background-color: var(--blue);
 }
 
@@ -55,7 +55,7 @@ html,
 body {
     direction: ltr;
     touch-action: manipulation;
-    /* user-select: none; */
+    user-select: none;
     color: var(--fg);
     background-color: var(--bg);
     font: 400 15px system-ui, -apple-system, BlinkMacSystemFont, Roboto, 'Segoe UI', Helvetica, Arial, sans-serif;
@@ -74,11 +74,9 @@ svg {
 nav {
     position: fixed;
     flex-direction: column;
-    background-color: var(--bg);
     color: var(--gray);
     width: 100%;
     height: 3.75rem;
-    z-index: 2;
 }
 
 nav > * {
@@ -206,74 +204,38 @@ nav span {
 
 /* ----- Menu ----- */
 menu {
-    position: fixed;
     background-color: var(--bg);
     border-right: var(--border);
     min-width: var(--menu-size);
     height: calc(100% - 1.875rem);
-    top: 1.875rem;
-    z-index: 2;
+    margin-top: 1.875rem;
+    z-index: 1;
 }
 
 /* ----- Main ----- */
 main {
-    position: relative;
+    flex-grow: 1;
+    overflow: hidden auto;
     font-family: monospace;
-    width: calc(100% - var(--menu-size));
-    height: fit-content;
-    margin: 3.875rem 0 0 var(--menu-size);
-    padding-bottom: calc(100vh - 3.875rem);
-    /* padding-bottom: calc(100vh - 5rem); */
+    height: calc(100% - 3.875rem);
+    margin-top: 3.875rem;
 }
 
-code,
-textarea {
-    width: 100%;
-    height: 100%;
-    padding: 0 4rem;
-}
-
-/* --- Textarea --- */
-textarea {
-    position: absolute;
-}
-
-/* --- Code --- */
-code {
-    flex-wrap: wrap;
-    align-content: flex-start;
-    pointer-events: none;
-    /* overflow: auto; */
-    counter-reset: ln 0;
-    z-index: 1;
-}
-
-/* -- Newline -- */
-.ln {
-    position: relative;
-    counter-increment: ln;
+main > div {
+    flex-direction: column;
+    align-items: flex-end;
     color: var(--gray);
-    width: 100%;
-    height: 0;
+    width: 3.5rem;
+    padding-right: .75rem;
 }
 
-.ln::before {
-    position: absolute;
-    text-align: end;
-    content: counter(ln);
-    width: 3rem;
-    left: -3.75rem;
+main > textarea {
+    /* flex-grow: 1; */
+    overflow-inline: none;
+    background-color: #f9f;
+    width: calc(100% - 3.625rem);
+    /* height: 100%; */
 }
-
-.ln + .ln,
-.ln:last-child {
-    height: 1.125rem;
-}
-
-.ln + .ln::before {
-    top: 1.125rem;
-}
-
 
 
 

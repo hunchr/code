@@ -1,5 +1,7 @@
 "use strict";
+let ln = 1;
 const $ = e => document.querySelector(e),
+      lines = $("main > div"),
       code = $("code"),
       ta = $("textarea"),
 
@@ -12,27 +14,11 @@ shortcut = key => {
 ta.addEventListener("keydown", ev => {
     const key = ev.key;
 
-    // Keyboard shortcuts [alt]
-    if (ev.altKey) {
-        ev.preventDefault();
-        return key === "Alt" ? null : shortcut(key);
-    }
-
-    // Newline [enter]
-    if (key === "Enter") {
-        const ln = document.createElement("div");
-        ln.classList = "ln";
-        return code.appendChild(ln);
-    }
-
-
-
-
-
-
-
-
-
+    // // Keyboard shortcuts [alt]
+    // if (ev.altKey) {
+    //     ev.preventDefault();
+    //     return key === "Alt" ? null : shortcut(key);
+    // }
 
     // // Newline [enter]
     // if (key === "Enter") {
