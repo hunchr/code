@@ -2,13 +2,25 @@
     /* WCAG Color Contrast:       #000 */
     --black: #000;          /*  1.00 */
     --white: #fff;          /* 21.00 */
-    --blue: #6060ff;        /*  4.61 */
-    --blue-hover: #5050ff;  /*  3.93  */
     --bg: #000;             /*  1.00 */
     --fg: #e4e4e4;          /* 16.51 */
     --gray: #888890;        /*  5.97 */
     --gray-border: #383840; /*  1.80 */
     --gray-input: #181820;  /*  1.19 */
+    --red: #ff8080;          /*  8.65 */
+    --orange: #ffc080;       /* 13.10 */
+    --yellow: #ffff80;       /* 19.86 */
+    --chartreuse: #c0ff80;   /* 17.85 */
+    --green: #80ff80;        /* 16.53 */
+    --spring-green: #80ffc0; /* 16.98 */
+    --cyan: #80ffff;         /* 17.66 */
+    --azure: #80c0ff;        /* 10.90 */
+    /* --blue: #8080ff;          6.44 */
+    --blue: #6060ff;        /*  4.61 */
+    --blue-hover: #5050ff;  /*  3.93  */
+    --violet: #c080ff;       /*  7.77 */
+    --magenta: #ff80ff;      /*  9.78 */
+    --rose: #ff80c0;         /*  9.10 */
     --radius: .375rem;
     --border: 1px solid var(--gray-border);
     --menu-size: 12rem;
@@ -54,66 +66,141 @@ button {
     align-items: center;
 }
 
+svg {
+    aspect-ratio: 1/1;
+}
+
 /* ----- Nav ----- */
 nav {
     position: fixed;
     flex-direction: column;
+    color: var(--gray);
     width: 100%;
     height: 3.75rem;
 }
 
 nav > * {
-    overflow: auto hidden;
+    align-items: center;
     border-bottom: var(--border);
     height: 1.875rem;
 }
 
 nav button {
     white-space: pre;
+    min-width: fit-content;
     height: 100%;
     padding: 0 .4375rem;
+}
+
+nav button:hover {
+    color: var(--fg);
+    background-color: var(--gray-input);
 }
 
 /* --- Navigation --- */
 #nav {
     width: 100%;
+    padding: .125rem;
 }
 
 #nav button {
-    color: var(--gray);
+    border-radius: var(--radius);
 }
+
+/* -- Logo -- */
+#logo {
+    pointer-events: none;
+    padding: .25rem;
+    margin-right: .125rem;
+}
+
+#logo svg {
+    width: 1.125rem;
+}
+
+/* -- Dropdown buttons -- */
+#nav > div:nth-child(2) {
+    overflow: auto hidden;
+    width: calc(100% - 5.375rem);
+}
+
+/* -- Maximize/Minimize/Exit -- */
+#appbtn {
+    flex-grow: 1;
+    justify-content: flex-end;
+    margin-right: .4375rem;
+}
+
+#appbtn button {
+    border-radius: 50%;
+    width: .75rem;
+    height: .75rem;
+    padding: 0;
+    margin-left: .25rem;
+}
+
+#appbtn :first-child {background-color: var(--green)}
+#appbtn :nth-child(2) {background-color: var(--yellow)}
+#appbtn :last-child {background-color: var(--red)}
 
 /* --- Opened files --- */
 #of {
+    overflow: auto hidden;
     width: calc(100% - var(--menu-size));
     margin-left: var(--menu-size);
 }
 
 #of button {
-    min-width: fit-content;
     border-right: var(--border);
 }
 
-/* File icon */
-#of button span {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100%;
-    width: 1rem;
-    height: 1rem;
-    margin-right: .125rem;
+/* Open file */
+.active {
+    color: var(--fg);
+    border-top: .0625rem solid var(--blue);
+    padding-bottom: .0625rem;
 }
 
 /* File name */
-#of button div {
+#of div {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: var(--menu-size);
+    max-width: 12rem;
 }
 
-/* -- File icons -- */
+/* File icon */
+nav span {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url(i/file.svg);
+    width: 1rem;
+    height: 1rem;
+    margin-right: .25rem;
+}
+
+/* Show 'unsaved' icon */
+.unsaved::after {
+    content: '*';
+}
+
+/* -- Show 'close' icon -- */
+#of button:hover span {
+    background-size: .75rem;
+    background-image: url(i/.close.svg);
+    background-color: var(--gray-input);
+}
+
+#of button:hover span:hover {
+    background-image: url(i/.close-hover.svg);
+}
+
+/* -- Icons -- */
 .css {background-image: url(i/css.svg)}
+.html {background-image: url(i/html.svg)}
+.json {background-image: url(i/json.svg)}
+.py {background-image: url(i/py.svg)}
 
 /* ----- Menu ----- */
 menu {
@@ -132,12 +219,6 @@ main {
     height: calc(100% - 3.75rem);
     margin-top: 3.75rem;
 }
-
-
-
-
-
-
 
 
 
