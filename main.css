@@ -32,6 +32,7 @@
     background-color: var(--blue);
 }
 
+main:not(.active),
 ::-webkit-scrollbar {
     display: none;
 }
@@ -55,7 +56,7 @@ html,
 body {
     direction: ltr;
     touch-action: manipulation;
-    /* user-select: none; */
+    user-select: none;
     color: var(--fg);
     background-color: var(--bg);
     font: 400 15px system-ui, -apple-system, BlinkMacSystemFont, Roboto, 'Segoe UI', Helvetica, Arial, sans-serif;
@@ -148,16 +149,18 @@ nav button:hover {
 /* --- Opened files --- */
 #of {
     overflow: auto hidden;
+    pointer-events: none;
     width: calc(100% - var(--menu-size));
     margin-left: var(--menu-size);
 }
 
 #of button {
+    pointer-events: all;
     border-right: var(--border);
 }
 
 /* Open file */
-.active {
+#of .active {
     color: var(--fg);
     border-top: .0625rem solid var(--blue);
     padding-bottom: .0625rem;
@@ -168,6 +171,7 @@ nav button:hover {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
+    pointer-events: none;
     max-width: 12rem;
 }
 
@@ -220,39 +224,45 @@ main {
     position: relative;
     font-family: monospace;
     width: calc(100% - var(--menu-size));
-    height: fit-content;
-    margin: 3.875rem 0 0 var(--menu-size);
-    padding-bottom: calc(100vh - 3.875rem);
-    /* padding-bottom: calc(100vh - 5rem); */
+    /* height: fit-content; */
+    /* height: calc(100% - 3.875rem); */
+    height: 100%;
+    /* margin: 3.875rem 0 0 var(--menu-size); */
+    margin-left: var(--menu-size);
+    /* padding-bottom: calc(100vh - 3.875rem); */
 }
 
 code,
 textarea {
+    white-space: pre;
     width: 100%;
     height: 100%;
-    padding: 0 4rem;
+    /* padding: 4rem 4rem calc(100vh - 5.125rem) 4rem; */
+    padding: 4rem 4rem calc(100vh - 5.125rem) .5rem;
 }
 
 /* --- Textarea --- */
 textarea {
-    position: absolute;
+    /* position: absolute; */
+    /* caret-color: var(--fg); */
+    /* color: var(--bg); */ /* Hide text because text is already displayed in <code> */ /* TODO: better implementation for SEO */
+    color: var(--fg);
 }
 
 /* --- Code --- */
-code {
+/* code {
     flex-wrap: wrap;
     align-content: flex-start;
     pointer-events: none;
-    /* overflow: auto; */
     counter-reset: ln 0;
     z-index: 1;
-}
+} */
 
 /* -- Newline -- */
-.ln {
+/* .ln {
     position: relative;
+    visibility: hidden;
     counter-increment: ln;
-    color: var(--gray);
     width: 100%;
     height: 0;
 }
@@ -260,7 +270,9 @@ code {
 .ln::before {
     position: absolute;
     text-align: end;
+    visibility: visible;
     content: counter(ln);
+    color: var(--gray);
     width: 3rem;
     left: -3.75rem;
 }
@@ -272,8 +284,7 @@ code {
 
 .ln + .ln::before {
     top: 1.125rem;
-}
-
+} */
 
 
 
