@@ -1,5 +1,5 @@
 "use strict";
-let handle, // File handle
+let handle,
     openFile = document.body,
     openedFilesCount = 0,
     code;
@@ -7,48 +7,58 @@ let handle, // File handle
 const $ = e => document.querySelector(e),
       body = openFile,
       template = $("main"),
-      openedFiles = $("#of"),
+      openedFiles = $("#of");
 
-// Open file or directory
-fsOpen = async () => {
-    [handle] = await window.showOpenFilePicker({id: "dir"});
+// Open file
+$("#testfile").addEventListener("click", async () => {
+    [handle] = await window.showOpenFilePicker({id: "file"});
 
-    // File
-    if (handle.kind === "file") {
-        const file = await handle.getFile(),
-              data = await file.text(),
-              main = template.cloneNode(true),
-              tab = document.createElement("button"),
-              icon = document.createElement("span"),
-              name = document.createElement("div");
+    const file = await handle.getFile(),
+          data = await file.text(),
+          main = template.cloneNode(true),
+          tab = document.createElement("button"),
+          icon = document.createElement("span"),
+          name = document.createElement("div");
 
-        openFile.classList.remove("active");
-        openFile = tab;
+    openFile.classList.remove("active");
+    openFile = tab;
 
-        [main, tab].forEach(e => e.classList.add("id-" + openedFilesCount, "active"));
-        openedFilesCount++;
-        code = main.querySelector("textarea");
-        icon.classList = (file.name.match(/(?=.)[a-z]\w*$/i) || [""])[0];
-        name.innerHTML = file.name;
+    [main, tab].forEach(e => e.classList.add("id-" + openedFilesCount, "active"));
+    openedFilesCount++;
+    code = main.querySelector("textarea");
+    icon.classList = (file.name.match(/(?=.)[a-z]\w*$/i) || [""])[0];
+    name.innerHTML = file.name;
 
-        tab.appendChild(icon);
-        tab.appendChild(name);
-        openedFiles.appendChild(tab);
+    tab.appendChild(icon);
+    tab.appendChild(name);
+    openedFiles.appendChild(tab);
 
-        code.value = data;
-        body.appendChild(main);
-    }
-    // Directory
-    else if (handle.kind === "directory") {
-        // TODO
-    }
-};
-
-$("#test").addEventListener("click", () => {
-    fsOpen();
+    code.value = data;
+    body.appendChild(main);
 });
 
-// Sort/Close opened files // TODO
+// Open directory
+$("#testdir").addEventListener("click", async () => {
+    handle = await window.showDirectoryPicker({id: "dir"});
+
+    for await (const entry of handle.values()) {
+        console.log(entry);
+        // console.log(entry.kind, entry.name);
+
+        // File
+        if (entry.kind === "file") {
+
+            
+
+        }
+        // Directory
+        else {
+
+        }
+    }
+});
+
+// Close opened files // TODO
 openedFiles.addEventListener("click", ev => {
     const target = ev.target;
 
@@ -71,6 +81,8 @@ openedFiles.addEventListener("click", ev => {
         parent.remove();
     }
 });
+
+
 
 
 

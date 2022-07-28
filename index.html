@@ -6,7 +6,7 @@
     <title>Code</title>
     <meta name="theme-color" content="#000000">
     <link rel="stylesheet" href="main.css">
-    <script src="main.js" defer></script>
+    <!-- <script src="main.js" defer></script> -->
     <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
 </head>
 <body>
@@ -14,8 +14,8 @@
     <div id="nav">
         <button id="logo" aria-label="Logo"><svg viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="#6060ff"/><path d="M4.93 2.22c-.36-.1-.74-.08-1.1.03-.17-.4-.46-.75-.83-.97-.38.22-.66.56-.83.97-.36-.11-.74-.12-1.1-.03-.18.67-.01 1.4.51 1.93.39.39.91.58 1.42.58.51 0 1.03-.19 1.42-.58.52-.52.69-1.26.51-1.93zm-2.56 1.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm1.25 0c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5z" fill="#fff"/></svg></button>
         <div>
-            <button id="test">File</button>
-            <button>Edit</button>
+            <button id="testfile">File</button>
+            <button id="testdir">Edit</button>
             <button>Selection</button>
             <button>File</button>
             <button>View</button>
@@ -31,14 +31,19 @@
         </div>
     </div>
     <div id="of">
-        <button class="id-0 active unsaved"><span class="py"></span><div>helloworld.py</div></button>
-        <button class="unsaved"><span class="txt"></span><div>SomeFileWithAVeryLongName.txt</div></button>
+        <!-- <button class="id-0 active unsaved"><span class="py"></span><div>helloworld.py</div></button>
+        <button class="unsaved"><span class="txt"></span><div>SomeFileWithAVeryLongName.txt</div></button> -->
     </div>
 </nav>
 <menu>
-    menu
+    <div class="directory-cont expanded">
+        <button class="id-2"><span class="directory"></span><div>some-directory</div></button>
+        <button class="id-3"><span></span><div>LICENSE</div></button>
+    </div>
+    <button class="id-0 active unsaved"><span class="py"></span><div>helloworld.py</div></button>
+    <button class="id-1"><span class="md"></span><div>README.md</div></button>
 </menu>
-<main class="id-0 active"> <!--remove class 'active', testing purposes -->
+<!-- <main class="id-0 active">
 <textarea spellcheck="false"># Testing
 ## Test 1: long line
 asodfjioa jsdfaksdfklm aklsdf lamsdkfaksdfk naskdfnkj ansdjkfn jkasdjkfn jaksdjfn jasdkfn jasdjfn ajsdf ajsdfnjk nasjdfjk 
@@ -84,13 +89,13 @@ blabla
 blabla
 blabla
 blabla</textarea>
-</main>
+</main> -->
 
-<!-- <main>
+<main>
     <code>
         <div class="ln"></div>
     </code>
     <textarea spellcheck="false"></textarea>
-</main> -->
+</main>
 </body>
 </html>

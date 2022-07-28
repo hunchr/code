@@ -22,7 +22,7 @@
     --magenta: #ff80ff;      /*  9.78 */
     --rose: #ff80c0;         /*  9.10 */
     --radius: .375rem;
-    --border: 1px solid var(--gray-border);
+    --border: .0625rem solid var(--gray-border);
     --menu-size: 12rem;
     font-size: 16px; /* Defines 'rem', do not delete */
 }
@@ -95,7 +95,8 @@ nav button {
     padding: 0 .4375rem;
 }
 
-nav button:hover {
+nav button:hover,
+menu button:hover {
     color: var(--fg);
     background-color: var(--gray-input);
 }
@@ -167,7 +168,8 @@ nav button:hover {
 }
 
 /* File name */
-#of div {
+#of div,
+menu button div {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -176,11 +178,12 @@ nav button:hover {
 }
 
 /* File icon */
-nav span {
+nav span,
+menu span {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    background-image: url(i/file.svg);
+    background-image: url(f/file.svg);
     width: 1rem;
     height: 1rem;
     margin-right: .25rem;
@@ -194,30 +197,94 @@ nav span {
 /* -- Show 'close' icon -- */
 #of button:hover span {
     background-size: .75rem;
-    background-image: url(i/.close.svg);
+    background-image: url(f/.close.svg);
     background-color: var(--gray-input);
 }
 
 #of button:hover span:hover {
-    background-image: url(i/.close-hover.svg);
+    background-image: url(f/.close-hover.svg);
 }
 
-/* -- Icons -- */
-.css {background-image: url(i/css.svg)}
-.html {background-image: url(i/html.svg)}
-.json {background-image: url(i/json.svg)}
-.py {background-image: url(i/py.svg)}
+/* -- File icons -- */
+/* - Primary file extensions - */
+.css {background-image: url(f/css.svg)}
+.html {background-image: url(f/html.svg)}
+.json {background-image: url(f/json.svg)}
+.yaml {background-image: url(f/yaml.svg)}
+.php {background-image: url(f/php.svg)}
+.md {background-image: url(f/md.svg)}
+.ts {background-image: url(f/ts.svg)}
+.svg {background-image: url(f/svg.svg)}
+.java {background-image: url(f/java.svg)}
+
+/* - Other file extensions - */
+.htm {background-image: url(f/html.svg)}
+.yml {background-image: url(f/yaml.svg)}
+.phar {background-image: url(f/php.svg)}
+.phtml {background-image: url(f/php.svg)}
+.pht {background-image: url(f/php.svg)}
+.phps {background-image: url(f/php.svg)}
+.markdown {background-image: url(f/md.svg)}
+.tsx {background-image: url(f/ts.svg)}
+.class {background-image: url(f/java.svg)}
+.jar {background-image: url(f/java.svg)}
+.jmod {background-image: url(f/java.svg)}
+
+/* -- Directory icons -- */
+.directory {background-image: url(d/directory.svg)}
 
 /* ----- Menu ----- */
 menu {
+    flex-direction: column;
     position: fixed;
+    overflow: hidden auto;
+    pointer-events: none;
     background-color: var(--bg);
     border-right: var(--border);
-    min-width: var(--menu-size);
+    width: var(--menu-size);
+    /* min-width: var(--menu-size); */
     height: calc(100% - 1.875rem);
     top: 1.875rem;
     z-index: 2;
 }
+
+menu button {
+    white-space: pre;
+    pointer-events: all;
+    width: 100%;
+    height: 1.875rem;
+    padding: 0 .4375rem;
+}
+
+.directory-cont {
+    flex-direction: column;
+}
+
+.directory-cont > :not(:first-child) {
+    padding-left: .875rem;
+}
+
+.directory-cont:not(.expanded) > :not(:first-child) {
+    display: none;
+}
+
+
+/* .directory-cont > :not(:first-child)::before {
+    content: '';
+    border-bottom: .125rem solid var(--gray-border);
+    border-left: .125rem solid var(--gray-border);
+    width: .125rem;
+    height: .5rem;
+    margin: 0 .25rem .5rem .25rem;
+} */
+
+
+
+
+
+
+
+
 
 /* ----- Main ----- */
 main {
@@ -225,9 +292,7 @@ main {
     font-family: monospace;
     width: calc(100% - var(--menu-size));
     /* height: fit-content; */
-    /* height: calc(100% - 3.875rem); */
     height: 100%;
-    /* margin: 3.875rem 0 0 var(--menu-size); */
     margin-left: var(--menu-size);
     /* padding-bottom: calc(100vh - 3.875rem); */
 }
