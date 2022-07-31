@@ -1,40 +1,127 @@
 "use strict";
+const $ = e => document.querySelector(e),
+      body = document.body,
+      template = $("main"),
+      welcomePage = $("#welcome"),
+      menu = $("menu"),
+      tabs = $("#tabs");
+
 let handle,
-    openFile = document.body,
-    openedFilesCount = 0,
+    idIndex = 0,
+    main = welcomePage,
+    tab = main,
     code;
 
-const $ = e => document.querySelector(e),
-      body = openFile,
-      template = $("main"),
-      openedFiles = $("#of");
+// Mark file as unsaved
+const unsaved = () => {
+    tab.classList.add("unsaved");
+    code.removeEventListener("keyup", unsaved);
+},
 
+// Create tab
+createTab = (id, fileName, parent, isDir) => {
+    const file = { name: fileName },
+          icon = document.createElement("span"),
+          name = document.createElement("div");
+        
+    tab = document.createElement("button");
+    tab.classList.add(id);
+
+    icon.classList = isDir ? "directory" : (file.name.match(/(?=.)[a-z]\w*$/i) || [""])[0];
+    name.innerHTML = file.name;
+    
+    tab.appendChild(icon);
+    tab.appendChild(name);
+    parent.appendChild(tab);
+},
+
+// Open file
+fsOpen = (id, fileName) => {
+    tab.classList.remove("active");
+    main.classList.remove("active");
+
+    main = $("main." + id),
+    tab = $("#tabs ." + id);
+
+    if (!id) {
+        id = "id-" + idIndex++;
+    }
+
+    // --- Main ---
+    if (!main) {
+        main = template.cloneNode(true);
+        main.classList.add(id);
+        body.appendChild(main);
+        // TODO: textarea value
+    }
+
+    // Focus textarea
+    code = main.firstElementChild;
+    code.focus();
+    code.addEventListener("keyup", unsaved);
+
+    // --- Tabs ---
+    if (!tab) {
+        createTab(id, fileName || "Untitled", tabs);
+    }
+
+    tab.classList.add("active");
+    main.classList.add("active");
+};
+
+// Open/Close tabs
+tabs.addEventListener("click", ev => {
+    const target = ev.target;
+
+    // Open file
+    if (target.tagName === "BUTTON") {
+        fsOpen(target.classList[0]);
+    }
+    // Close file
+    else {
+        const sibling = tab.nextElementSibling || tab.previousElementSibling;
+
+        tab.remove();
+        main.classList.remove("active");
+
+        if (sibling) {
+            fsOpen(sibling.classList[0]);
+        }
+        else {
+            tab = main = welcomePage;
+            welcomePage.classList.add("active");
+        }
+    }
+});
+
+// Open file from menu
+menu.addEventListener("click", ev => {
+    const target = ev.target,
+          child = target.firstChild;
+
+    if (target.tagName === "MENU") return;
+
+    // Open/Close directory
+    if (child.classList.contains("directory")) {
+        child.classList.toggle("exp");
+        target.parentNode.classList.toggle("expanded");
+    }
+    // Open file
+    else {
+        fsOpen(target.classList[0], target.lastChild.innerHTML);
+    }
+});
+
+// ----- Keyboard shortcuts -----
 // Open file
 $("#testfile").addEventListener("click", async () => {
     [handle] = await window.showOpenFilePicker({id: "file"});
 
     const file = await handle.getFile(),
-          data = await file.text(),
-          main = template.cloneNode(true),
-          tab = document.createElement("button"),
-          icon = document.createElement("span"),
-          name = document.createElement("div");
+          data = await file.text();
 
-    openFile.classList.remove("active");
-    openFile = tab;
-
-    [main, tab].forEach(e => e.classList.add("id-" + openedFilesCount, "active"));
-    openedFilesCount++;
-    code = main.querySelector("textarea");
-    icon.classList = (file.name.match(/(?=.)[a-z]\w*$/i) || [""])[0];
-    name.innerHTML = file.name;
-
-    tab.appendChild(icon);
-    tab.appendChild(name);
-    openedFiles.appendChild(tab);
-
+    fsOpen(null, file.name);
     code.value = data;
-    body.appendChild(main);
 });
 
 // Open directory
@@ -42,46 +129,17 @@ $("#testdir").addEventListener("click", async () => {
     handle = await window.showDirectoryPicker({id: "dir"});
 
     for await (const entry of handle.values()) {
-        console.log(entry);
-        // console.log(entry.kind, entry.name);
-
         // File
         if (entry.kind === "file") {
-
-            
-
+            createTab("id-" + idIndex++, entry.name, menu);
         }
         // Directory
         else {
-
+            createTab("id-" + idIndex++, entry.name, menu, true);
+            // TODO: files in dir
         }
     }
 });
-
-// Close opened files // TODO
-openedFiles.addEventListener("click", ev => {
-    const target = ev.target;
-
-    // Open file
-    if (target.tagName === "BUTTON") {
-        // TODO
-    }
-    // Close file
-    else {
-        const parent = target.parentNode,
-              next = parent.nextElementSibling; // TODO: no next sibling? => prev; no prev? => ?
-              main = $("main." + parent.classList[0]);
-
-        openFile = next;
-        next.classList.add("active");
-        // TODO show <main>
-
-        // // main.classList.remove("active");
-        main.remove(); // TODO: find better solution (improve efficiency)
-        parent.remove();
-    }
-});
-
 
 
 

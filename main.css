@@ -147,28 +147,28 @@ menu button:hover {
 #appbtn :nth-child(2) {background-color: var(--yellow)}
 #appbtn :last-child {background-color: var(--red)}
 
-/* --- Opened files --- */
-#of {
+/* --- Tabs (open files) --- */
+#tabs {
     overflow: auto hidden;
     pointer-events: none;
     width: calc(100% - var(--menu-size));
     margin-left: var(--menu-size);
 }
 
-#of button {
+#tabs button {
     pointer-events: all;
     border-right: var(--border);
 }
 
 /* Open file */
-#of .active {
+#tabs .active {
     color: var(--fg);
     border-top: .0625rem solid var(--blue);
     padding-bottom: .0625rem;
 }
 
 /* File name */
-#of div,
+#tabs div,
 menu button div {
     display: block;
     overflow: hidden;
@@ -195,13 +195,13 @@ menu span {
 }
 
 /* -- Show 'close' icon -- */
-#of button:hover span {
+#tabs button:hover span {
     background-size: .75rem;
     background-image: url(f/.close.svg);
     background-color: var(--gray-input);
 }
 
-#of button:hover span:hover {
+#tabs button:hover span:hover {
     background-image: url(f/.close-hover.svg);
 }
 
@@ -232,17 +232,16 @@ menu span {
 
 /* -- Directory icons -- */
 .directory {background-image: url(d/directory.svg)}
+.directory.exp {background-image: url(d/directory-exp.svg)}
 
 /* ----- Menu ----- */
 menu {
     flex-direction: column;
     position: fixed;
     overflow: hidden auto;
-    pointer-events: none;
     background-color: var(--bg);
     border-right: var(--border);
     width: var(--menu-size);
-    /* min-width: var(--menu-size); */
     height: calc(100% - 1.875rem);
     top: 1.875rem;
     z-index: 2;
@@ -250,10 +249,17 @@ menu {
 
 menu button {
     white-space: pre;
-    pointer-events: all;
     width: 100%;
-    height: 1.875rem;
+    min-height: 1.875rem;
     padding: 0 .4375rem;
+}
+
+/* menu .active {
+    background-color: var(--gray-input);
+} */
+
+menu button > * {
+    pointer-events: none;
 }
 
 .directory-cont {
@@ -268,24 +274,6 @@ menu button {
     display: none;
 }
 
-
-/* .directory-cont > :not(:first-child)::before {
-    content: '';
-    border-bottom: .125rem solid var(--gray-border);
-    border-left: .125rem solid var(--gray-border);
-    width: .125rem;
-    height: .5rem;
-    margin: 0 .25rem .5rem .25rem;
-} */
-
-
-
-
-
-
-
-
-
 /* ----- Main ----- */
 main {
     position: relative;
@@ -297,6 +285,23 @@ main {
     /* padding-bottom: calc(100vh - 3.875rem); */
 }
 
+/* --- Welcome page --- */
+#welcome {
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg);
+    height: calc(100% - 1.875rem);
+    margin-top: 1.875rem;
+    z-index: 2;
+}
+
+#welcome svg {
+    max-width: calc(100% - 1rem);
+    max-height: calc(100% - 1rem);
+    width: 8rem;
+}
+
+/* --- Textarea --- */
 code,
 textarea {
     white-space: pre;
@@ -306,7 +311,6 @@ textarea {
     padding: 4rem 4rem calc(100vh - 5.125rem) .5rem;
 }
 
-/* --- Textarea --- */
 textarea {
     /* position: absolute; */
     /* caret-color: var(--fg); */
@@ -350,6 +354,8 @@ textarea {
 .ln + .ln::before {
     top: 1.125rem;
 } */
+
+
 
 
 
