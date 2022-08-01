@@ -183,7 +183,7 @@ menu span {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    background-image: url(f/file.svg);
+    background-image: url(e/default.svg);
     width: 1rem;
     height: 1rem;
     margin-right: .25rem;
@@ -197,42 +197,17 @@ menu span {
 /* -- Show 'close' icon -- */
 #tabs button:hover span {
     background-size: .75rem;
-    background-image: url(f/.close.svg);
+    background-image: url(img/i/close.svg);
     background-color: var(--gray-input);
 }
 
 #tabs button:hover span:hover {
-    background-image: url(f/.close-hover.svg);
+    background-image: url(img/i/close-hover.svg);
 }
 
-/* -- File icons -- */
-/* - Primary file extensions - */
-.css {background-image: url(f/css.svg)}
-.html {background-image: url(f/html.svg)}
-.json {background-image: url(f/json.svg)}
-.yaml {background-image: url(f/yaml.svg)}
-.php {background-image: url(f/php.svg)}
-.md {background-image: url(f/md.svg)}
-.ts {background-image: url(f/ts.svg)}
-.svg {background-image: url(f/svg.svg)}
-.java {background-image: url(f/java.svg)}
-
-/* - Other file extensions - */
-.htm {background-image: url(f/html.svg)}
-.yml {background-image: url(f/yaml.svg)}
-.phar {background-image: url(f/php.svg)}
-.phtml {background-image: url(f/php.svg)}
-.pht {background-image: url(f/php.svg)}
-.phps {background-image: url(f/php.svg)}
-.markdown {background-image: url(f/md.svg)}
-.tsx {background-image: url(f/ts.svg)}
-.class {background-image: url(f/java.svg)}
-.jar {background-image: url(f/java.svg)}
-.jmod {background-image: url(f/java.svg)}
-
 /* -- Directory icons -- */
-.directory {background-image: url(d/directory.svg)}
-.directory.exp {background-image: url(d/directory-exp.svg)}
+.directory {background-image: url(d/default.svg)}
+.directory.open {background-image: url(d/default-open.svg)}
 
 /* ----- Menu ----- */
 menu {
@@ -270,7 +245,7 @@ menu button > * {
     padding-left: .875rem;
 }
 
-.directory-cont:not(.expanded) > :not(:first-child) {
+.directory-cont:not(.open) > :not(:first-child) {
     display: none;
 }
 

@@ -103,8 +103,7 @@ menu.addEventListener("click", ev => {
 
     // Open/Close directory
     if (child.classList.contains("directory")) {
-        child.classList.toggle("exp");
-        target.parentNode.classList.toggle("expanded");
+        [child, target.parentNode].forEach(e => e.classList.toggle("open"));
     }
     // Open file
     else {
@@ -126,7 +125,11 @@ $("#testfile").addEventListener("click", async () => {
 
 // Open directory
 $("#testdir").addEventListener("click", async () => {
+    console.log("Open directory");
     handle = await window.showDirectoryPicker({id: "dir"});
+    // const values = await handle.values();
+
+    // console.log("values:", values);
 
     for await (const entry of handle.values()) {
         // File
@@ -136,7 +139,7 @@ $("#testdir").addEventListener("click", async () => {
         // Directory
         else {
             createTab("id-" + idIndex++, entry.name, menu, true);
-            // TODO: files in dir
+            // TODO: files in dir + sort a-z
         }
     }
 });
