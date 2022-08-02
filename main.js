@@ -10,7 +10,8 @@ let handle,
     idIndex = 0,
     main = welcomePage,
     tab = main,
-    code;
+    code,
+    fs = [];
 
 // Mark file as unsaved
 const unsaved = () => {
@@ -18,130 +19,171 @@ const unsaved = () => {
     code.removeEventListener("keyup", unsaved);
 },
 
-// Create tab
-createTab = (id, fileName, parent, isDir) => {
-    const file = { name: fileName },
-          icon = document.createElement("span"),
-          name = document.createElement("div");
+// Create tab // TODO
+// createTab = (id, fileName, parent, isDir) => {
+//     const file = { name: fileName },
+//           icon = document.createElement("span"),
+//           name = document.createElement("div");
         
-    tab = document.createElement("button");
-    tab.classList.add(id);
+//     tab = document.createElement("button");
+//     tab.classList.add(id);
 
-    icon.classList = isDir ? "directory" : (file.name.match(/(?=.)[a-z]\w*$/i) || [""])[0];
-    name.innerHTML = file.name;
+//     icon.classList = isDir ? "directory" : (file.name.match(/(?=.)[a-z]\w*$/i) || [""])[0];
+//     name.innerHTML = file.name;
     
-    tab.appendChild(icon);
-    tab.appendChild(name);
-    parent.appendChild(tab);
+//     tab.appendChild(icon);
+//     tab.appendChild(name);
+//     parent.appendChild(tab);
+// },
+
+// // Open file
+// openFile = (id, fileName) => {
+//     tab.classList.remove("active");
+//     main.classList.remove("active");
+
+//     main = $("main." + id),
+//     tab = $("#tabs ." + id);
+
+//     if (!id) {
+//         id = "id-" + idIndex++;
+//     }
+
+//     // --- Main ---
+//     if (!main) {
+//         main = template.cloneNode(true);
+//         main.classList.add(id);
+//         body.appendChild(main);
+//         // TODO: textarea value
+//     }
+
+//     // Focus textarea
+//     code = main.firstElementChild;
+//     code.focus();
+//     code.addEventListener("keyup", unsaved);
+
+//     // --- Tabs ---
+//     if (!tab) {
+//         createTab(id, fileName || "Untitled", tabs);
+//     }
+
+//     tab.classList.add("active");
+//     main.classList.add("active");
+// },
+
+// Get files from file system
+getFiles = async (parent, entries) => {
+    for await (const entry of entries) {
+        parent.push(entry);
+
+        if (entry.kind === "directory") {
+            entry.children = [];
+            getFiles(entry.children, entry.values());
+        }
+    }
 },
 
-// Open file
-fsOpen = (id, fileName) => {
-    tab.classList.remove("active");
-    main.classList.remove("active");
+// Show files/directories in menu
+displayFiles = (parent, entries) => {
+    for (const entry of entries) {
+        const icon = document.createElement("span"),
+              name = document.createElement("div");
+                
+        tab = document.createElement("button");
+        // tab.classList.add("id-" + idIndex++);
 
-    main = $("main." + id),
-    tab = $("#tabs ." + id);
+        name.innerHTML = entry.name;
+        
+        tab.appendChild(icon);
+        tab.appendChild(name);
+        
+        if (entry.kind === "directory") {
+            const dir = document.createElement("div");
 
-    if (!id) {
-        id = "id-" + idIndex++;
-    }
+            dir.classList = "directory";
+            tab.classList.add("dir", "collapsed");
+            icon.dataset.d = entry.name;
 
-    // --- Main ---
-    if (!main) {
-        main = template.cloneNode(true);
-        main.classList.add(id);
-        body.appendChild(main);
-        // TODO: textarea value
-    }
+            dir.appendChild(tab);
+            parent.appendChild(dir);
 
-    // Focus textarea
-    code = main.firstElementChild;
-    code.focus();
-    code.addEventListener("keyup", unsaved);
-
-    // --- Tabs ---
-    if (!tab) {
-        createTab(id, fileName || "Untitled", tabs);
-    }
-
-    tab.classList.add("active");
-    main.classList.add("active");
-};
-
-// Open/Close tabs
-tabs.addEventListener("click", ev => {
-    const target = ev.target;
-
-    // Open file
-    if (target.tagName === "BUTTON") {
-        fsOpen(target.classList[0]);
-    }
-    // Close file
-    else {
-        const sibling = tab.nextElementSibling || tab.previousElementSibling;
-
-        tab.remove();
-        main.classList.remove("active");
-
-        if (sibling) {
-            fsOpen(sibling.classList[0]);
+            displayFiles(tab, entry.children);
         }
         else {
-            tab = main = welcomePage;
-            welcomePage.classList.add("active");
+            icon.dataset.e = (entry.name.match(/(?<=\.)[^. ]+$/) || [""])[0];
+            parent.appendChild(tab);
         }
     }
-});
+};
+
+// // Open/Close tabs
+// tabs.addEventListener("click", ev => {
+//     const target = ev.target;
+
+//     // Open file
+//     if (target.tagName === "BUTTON") {
+//         openFile(target.classList[0]);
+//     }
+//     // Close file
+//     else {
+//         const sibling = tab.nextElementSibling || tab.previousElementSibling;
+
+//         tab.remove();
+//         main.classList.remove("active");
+
+//         if (sibling) {
+//             openFile(sibling.classList[0]);
+//         }
+//         else {
+//             tab = main = welcomePage;
+//             welcomePage.classList.add("active");
+//         }
+//     }
+// });
 
 // Open file from menu
 menu.addEventListener("click", ev => {
     const target = ev.target,
+          tag = target.tagName,
           child = target.firstChild;
 
-    if (target.tagName === "MENU") return;
+    if (tag === "MENU") return;
 
+    // Show more options
+    if (tag === "DIV") {
+        console.log("TODO: show more options");
+    }
     // Open/Close directory
-    if (child.classList.contains("directory")) {
-        [child, target.parentNode].forEach(e => e.classList.toggle("open"));
+    else if (target.classList.contains("dir")) {
+        target.classList.toggle("collapsed");
+        // [child, target.parentNode].forEach(e => e.classList.toggle("open"));
     }
     // Open file
     else {
-        fsOpen(target.classList[0], target.lastChild.innerHTML);
+        console.log("TODO: open file from menu");
+        // openFile(target.classList[0], target.lastChild.innerHTML);
     }
 });
 
 // ----- Keyboard shortcuts -----
 // Open file
-$("#testfile").addEventListener("click", async () => {
-    [handle] = await window.showOpenFilePicker({id: "file"});
+// $("#testfile").addEventListener("click", async () => {
+//     [handle] = await window.showOpenFilePicker({id: "file"});
 
-    const file = await handle.getFile(),
-          data = await file.text();
+//     const file = await handle.getFile(),
+//           data = await file.text();
 
-    fsOpen(null, file.name);
-    code.value = data;
-});
+//     openFile(null, file.name);
+//     code.value = data;
+// });
 
 // Open directory
 $("#testdir").addEventListener("click", async () => {
-    console.log("Open directory");
     handle = await window.showDirectoryPicker({id: "dir"});
-    // const values = await handle.values();
 
-    // console.log("values:", values);
-
-    for await (const entry of handle.values()) {
-        // File
-        if (entry.kind === "file") {
-            createTab("id-" + idIndex++, entry.name, menu);
-        }
-        // Directory
-        else {
-            createTab("id-" + idIndex++, entry.name, menu, true);
-            // TODO: files in dir + sort a-z
-        }
-    }
+    getFiles(fs, handle.values()).then(() => {
+        fs = fs.sort((a, b) => a.kind.localeCompare(b.kind));
+        displayFiles(menu, fs);
+    });
 });
 
 

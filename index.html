@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="main.css">
     <style></style>
     <script src="main.js" defer></script>
-    <script src="settings.js" type="module" defer></script>
+    <!-- <script src="settings.js" type="module" defer></script> -->
     <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
 </head>
 <body>
@@ -32,16 +32,37 @@
             <button aria-label="Exit"></button>
         </div>
     </div>
-    <div id="tabs"></div>
+    <div id="tabs">
+        <button class="id-0 tab open"><div data-e="py"></div><div>helloworld.py</div><div></div></button>
+        <button class="id-1 tab unsaved"><div data-e="md"></div><div>README.md</div><div></div></button>
+    </div>
 </nav>
 <!-- Menu -->
 <menu>
-    <!-- <div class="directory-cont">
-        <button class="id-2"><span class="directory"></span><div>some-directory</div></button>
-        <button class="id-3"><span></span><div>LICENSE</div></button>
+    <!-- <div class="directory">
+        <button data-d="some-directory" class="id-2 dir"><span></span><div>some-directory</div></button>
+        <button data-e class="id-3"><span></span><div>LICENSE</div></button>
     </div>
-    <button class="id-0 active"><span class="py"></span><div>helloworld.py</div></button>
-    <button class="id-1"><span class="md"></span><div>README.md</div></button> -->
+    <button data-e="py" class="id-0 active"><span></span><div>helloworld.py</div></button>
+    <button data-e="md" class="id-1"><span></span><div>README.md</div></button> -->
+
+
+
+    <span>
+        <button class="id-2 tab dir collapsed"><div data-d="some-directory"></div><div>some-directory</div><div><svg viewBox="0 0 2 8"><circle cx="1" cy="1" r="1"/><circle cx="1" cy="7" r="1"/><circle cx="1" cy="4" r="1"/></svg></div></button>
+        <span>
+            <button class="id-2 tab dir collapsed"><div data-d="another directory"></div><div>another directory</div><div><svg viewBox="0 0 2 8"><circle cx="1" cy="1" r="1"/><circle cx="1" cy="7" r="1"/><circle cx="1" cy="4" r="1"/></svg></div></button>
+            <button class="id-3 tab"><div data-e="html"></div><div>index.html</div><div><svg viewBox="0 0 2 8"><circle cx="1" cy="1" r="1"/><circle cx="1" cy="7" r="1"/><circle cx="1" cy="4" r="1"/></svg></div></button>
+        </span>
+        <button class="id-3 tab"><div data-e></div><div>LICENSE</div><div><svg viewBox="0 0 2 8"><circle cx="1" cy="1" r="1"/><circle cx="1" cy="7" r="1"/><circle cx="1" cy="4" r="1"/></svg></div></button>
+    </span>
+    <button class="id-0 tab open"><div data-e="py"></div><div>helloworld.py</div><div><svg viewBox="0 0 2 8"><circle cx="1" cy="1" r="1"/><circle cx="1" cy="7" r="1"/><circle cx="1" cy="4" r="1"/></svg></div></button>
+    <button class="id-1 tab"><div data-e="md"></div><div>README.md</div><div><svg viewBox="0 0 2 8"><circle cx="1" cy="1" r="1"/><circle cx="1" cy="7" r="1"/><circle cx="1" cy="4" r="1"/></svg></div></button>
+
+
+
+
+
 </menu>
 <!-- Template -->
 <main>

@@ -32,7 +32,7 @@
     background-color: var(--blue);
 }
 
-main:not(.active),
+main:not(.open),
 ::-webkit-scrollbar {
     display: none;
 }
@@ -68,7 +68,9 @@ button {
 }
 
 svg {
+    pointer-events: none;
     aspect-ratio: 1/1;
+    fill: var(--gray);
 }
 
 /* ----- Nav ----- */
@@ -88,13 +90,6 @@ nav > * {
     height: 1.875rem;
 }
 
-nav button {
-    white-space: pre;
-    min-width: fit-content;
-    height: 100%;
-    padding: 0 .4375rem;
-}
-
 nav button:hover,
 menu button:hover {
     color: var(--fg);
@@ -108,7 +103,11 @@ menu button:hover {
 }
 
 #nav button {
+    white-space: pre;
+    min-width: fit-content;
     border-radius: var(--radius);
+    height: 100%;
+    padding: 0 .4375rem;
 }
 
 /* -- Logo -- */
@@ -147,55 +146,98 @@ menu button:hover {
 #appbtn :nth-child(2) {background-color: var(--yellow)}
 #appbtn :last-child {background-color: var(--red)}
 
-/* --- Tabs (open files) --- */
-#tabs {
-    overflow: auto hidden;
+/* --- Tabs --- */
+.tab {
+    white-space: pre;
+    /* min-width: fit-content; */
+    min-height: 1.875rem;
+    padding: 0 .1875rem;
+}
+
+/* Open tab */
+.open {
+    background-color: var(--gray-input);
+}
+
+/* Unsaved tab */
+.unsaved > :last-child {
+    background-image: url(img/i/unsaved.svg);
+}
+
+.tab > :not(:last-child) {
     pointer-events: none;
-    width: calc(100% - var(--menu-size));
-    margin-left: var(--menu-size);
 }
 
-#tabs button {
-    pointer-events: all;
-    border-right: var(--border);
+/* -- Icons -- */
+.dir::before,
+.tab > :last-child,
+.tab > :first-child {
+    justify-content: center;
+    align-items: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 1rem;
+    height: 1rem;
+    margin: 0 .25rem;
 }
 
-/* Open file */
-#tabs .active {
-    color: var(--fg);
-    border-top: .0625rem solid var(--blue);
-    padding-bottom: .0625rem;
+.tab:hover > :last-child {
+    background-image: none !important;
 }
 
-/* File name */
-#tabs div,
-menu button div {
+.tab svg {
+    height: .75rem;
+}
+
+.tab:not(.open):not(:hover) svg {
+    display: none;
+}
+
+.tab > :last-child:hover svg {
+    fill: var(--fg);
+}
+
+/* File icon */
+[data-e] {
+    background-image: url(img/i/file.svg);
+}
+
+/* Directory icon */
+[data-d] {
+    background-image: url(img/i/directory.svg);
+}
+
+/* -- Name -- */
+.tab > :nth-child(2) {
     display: block;
+    flex-grow: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     pointer-events: none;
     max-width: 12rem;
 }
 
-/* File icon */
-nav span,
-menu span {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-image: url(e/default.svg);
-    width: 1rem;
-    height: 1rem;
-    margin-right: .25rem;
+/* --- Opened tabs --- */
+#tabs {
+    overflow: auto hidden;
+    width: calc(100% - var(--menu-size));
+    margin-left: var(--menu-size);
 }
 
-/* Show 'unsaved' icon */
-.unsaved::after {
-    content: '*';
+#tabs button {
+    border-right: var(--border);
 }
 
-/* -- Show 'close' icon -- */
-#tabs button:hover span {
+/* Open tab */
+#tabs .open {
+    color: var(--fg);
+    border-top: .0625rem solid var(--blue);
+    padding-bottom: .0625rem;
+}
+
+/* 'Close' icon */
+/* #tabs button:hover span {
     background-size: .75rem;
     background-image: url(img/i/close.svg);
     background-color: var(--gray-input);
@@ -203,11 +245,7 @@ menu span {
 
 #tabs button:hover span:hover {
     background-image: url(img/i/close-hover.svg);
-}
-
-/* -- Directory icons -- */
-.directory {background-image: url(d/default.svg)}
-.directory.open {background-image: url(d/default-open.svg)}
+} */
 
 /* ----- Menu ----- */
 menu {
@@ -223,31 +261,80 @@ menu {
 }
 
 menu button {
-    white-space: pre;
     width: 100%;
-    min-height: 1.875rem;
-    padding: 0 .4375rem;
 }
 
-/* menu .active {
-    background-color: var(--gray-input);
-} */
-
-menu button > * {
-    pointer-events: none;
-}
-
-.directory-cont {
+/* --- Directory --- */
+menu span {
     flex-direction: column;
 }
 
-.directory-cont > :not(:first-child) {
-    padding-left: .875rem;
+.dir::before {
+    content: '';
+    background-image: url(img/i/drop-down.svg);
+    margin: 0;
 }
 
-.directory-cont:not(.open) > :not(:first-child) {
+.dir.collapsed::before {
+    background-image: url(img/i/drop-right.svg);
+}
+
+menu .tab:not(.dir) {
+    padding-left: 1.0625rem;
+}
+
+/* .tab.dir ~ .tab,
+.tab.dir ~ span .tab {
+    padding-left: 1.3125rem;
+} */
+
+/* menu span > :not(:first-child) {
+    padding-left: 1.3125rem !important;
+} */
+
+/* menu span {
+    padding-left: .5rem;
+}
+
+menu span > :first-child{
+    padding-left: calc( -.5rem);
+} */
+
+
+
+
+/* .tab.dir ~ .tab,
+.tab.dir span .tab {
+    padding-left: 1.3125rem;
+} */
+
+
+
+
+
+
+/* .tab.dir ~ button {
+    padding-left: 1.3125rem;
+} */
+
+/* .dir .dir ~ button {
+    padding-left: 1.5625rem;
+} */
+
+.dir.collapsed ~ * {
     display: none;
 }
+
+
+
+
+
+
+
+
+/* menu span:not(.open) > :not(:first-child) {
+    display: none;
+} */
 
 /* ----- Main ----- */
 main {
