@@ -96,7 +96,7 @@ menu button:hover {
     background-color: var(--gray-input);
 }
 
-/* --- Navigation --- */
+/* ----- Top nav ----- */
 #nav {
     width: 100%;
     padding: .125rem;
@@ -110,7 +110,13 @@ menu button:hover {
     padding: 0 .4375rem;
 }
 
-/* -- Logo -- */
+/* Dropdown buttons */
+#nav > div:nth-child(2) {
+    overflow: auto hidden;
+    width: calc(100% - 5.375rem);
+}
+
+/* --- Logo --- */
 #logo {
     pointer-events: none;
     padding: .25rem;
@@ -121,13 +127,7 @@ menu button:hover {
     width: 1.125rem;
 }
 
-/* -- Dropdown buttons -- */
-#nav > div:nth-child(2) {
-    overflow: auto hidden;
-    width: calc(100% - 5.375rem);
-}
-
-/* -- Maximize/Minimize/Exit -- */
+/* --- Maximize/Minimize/Exit --- */
 #appbtn {
     flex-grow: 1;
     justify-content: flex-end;
@@ -146,8 +146,9 @@ menu button:hover {
 #appbtn :nth-child(2) {background-color: var(--yellow)}
 #appbtn :last-child {background-color: var(--red)}
 
-/* --- Tabs --- */
+/* ----- Tabs ----- */
 .tab {
+    position: relative;
     white-space: pre;
     /* min-width: fit-content; */
     min-height: 1.875rem;
@@ -155,21 +156,20 @@ menu button:hover {
 }
 
 /* Open tab */
-.open {
+.tab.open {
     background-color: var(--gray-input);
 }
 
 /* Unsaved tab */
-.unsaved > :last-child {
+.unsaved :last-child {
     background-image: url(img/i/unsaved.svg);
 }
 
-.tab > :not(:last-child) {
+.tab :not(:last-child) {
     pointer-events: none;
 }
 
-/* -- Icons -- */
-.dir::before,
+/* --- Icons --- */
 .tab > :last-child,
 .tab > :first-child {
     justify-content: center;
@@ -182,22 +182,6 @@ menu button:hover {
     margin: 0 .25rem;
 }
 
-.tab:hover > :last-child {
-    background-image: none !important;
-}
-
-.tab svg {
-    height: .75rem;
-}
-
-.tab:not(.open):not(:hover) svg {
-    display: none;
-}
-
-.tab > :last-child:hover svg {
-    fill: var(--fg);
-}
-
 /* File icon */
 [data-e] {
     background-image: url(img/i/file.svg);
@@ -208,8 +192,8 @@ menu button:hover {
     background-image: url(img/i/directory.svg);
 }
 
-/* -- Name -- */
-.tab > :nth-child(2) {
+/* --- Name --- */
+.tab :nth-child(2) {
     display: block;
     flex-grow: 1;
     overflow: hidden;
@@ -218,7 +202,7 @@ menu button:hover {
     max-width: 12rem;
 }
 
-/* --- Opened tabs --- */
+/* ----- Opened tabs ----- */
 #tabs {
     overflow: auto hidden;
     width: calc(100% - var(--menu-size));
@@ -237,21 +221,20 @@ menu button:hover {
 }
 
 /* 'Close' icon */
-/* #tabs button:hover span {
-    background-size: .75rem;
+#tabs .tab:hover :last-child {
     background-image: url(img/i/close.svg);
-    background-color: var(--gray-input);
 }
 
-#tabs button:hover span:hover {
+#tabs .tab:hover :last-child:hover {
     background-image: url(img/i/close-hover.svg);
-} */
+}
 
 /* ----- Menu ----- */
 menu {
     flex-direction: column;
     position: fixed;
     overflow: hidden auto;
+    counter-set: nesting 0;
     background-color: var(--bg);
     border-right: var(--border);
     width: var(--menu-size);
@@ -260,8 +243,18 @@ menu {
     z-index: 2;
 }
 
+menu span,
 menu button {
     width: 100%;
+}
+
+/* --- 'More' icon --- */
+menu .tab:hover :last-child {
+    background-image: url(img/i/more.svg);
+}
+
+menu .tab:hover :last-child:hover {
+    background-image: url(img/i/more-hover.svg);
 }
 
 /* --- Directory --- */
@@ -269,72 +262,17 @@ menu span {
     flex-direction: column;
 }
 
-.dir::before {
-    content: '';
+.dir :last-child {
     background-image: url(img/i/drop-down.svg);
-    margin: 0;
 }
 
-.dir.collapsed::before {
+.collapsed :last-child {
     background-image: url(img/i/drop-right.svg);
 }
 
-menu .tab:not(.dir) {
-    padding-left: 1.0625rem;
-}
-
-/* .tab.dir ~ .tab,
-.tab.dir ~ span .tab {
-    padding-left: 1.3125rem;
-} */
-
-/* menu span > :not(:first-child) {
-    padding-left: 1.3125rem !important;
-} */
-
-/* menu span {
-    padding-left: .5rem;
-}
-
-menu span > :first-child{
-    padding-left: calc( -.5rem);
-} */
-
-
-
-
-/* .tab.dir ~ .tab,
-.tab.dir span .tab {
-    padding-left: 1.3125rem;
-} */
-
-
-
-
-
-
-/* .tab.dir ~ button {
-    padding-left: 1.3125rem;
-} */
-
-/* .dir .dir ~ button {
-    padding-left: 1.5625rem;
-} */
-
-.dir.collapsed ~ * {
+.collapsed + span {
     display: none;
 }
-
-
-
-
-
-
-
-
-/* menu span:not(.open) > :not(:first-child) {
-    display: none;
-} */
 
 /* ----- Main ----- */
 main {

@@ -1,5 +1,6 @@
 "use strict";
 const $ = e => document.querySelector(e),
+      wait = async ms => await new Promise(res => setTimeout(res, ms)),
       body = document.body,
       template = $("main"),
       welcomePage = $("#welcome"),
@@ -7,7 +8,7 @@ const $ = e => document.querySelector(e),
       tabs = $("#tabs");
 
 let handle,
-    idIndex = 0,
+    idx = 0,
     main = welcomePage,
     tab = main,
     code,
@@ -20,21 +21,39 @@ const unsaved = () => {
 },
 
 // Create tab // TODO
-// createTab = (id, fileName, parent, isDir) => {
-//     const file = { name: fileName },
-//           icon = document.createElement("span"),
-//           name = document.createElement("div");
-        
-//     tab = document.createElement("button");
-//     tab.classList.add(id);
+createTab = (id, file, parent) => {
+    const fileIcon = document.createElement("div"),
+          name = document.createElement("div"),
+          moreIcon = document.createElement("div");
 
-//     icon.classList = isDir ? "directory" : (file.name.match(/(?=.)[a-z]\w*$/i) || [""])[0];
-//     name.innerHTML = file.name;
+    tab = document.createElement("button");
+    tab.classList.add(id, "tab");
+    // tab.style.paddingLeft = padding + "rem";
+
+    name.innerHTML = file.name;
     
-//     tab.appendChild(icon);
-//     tab.appendChild(name);
-//     parent.appendChild(tab);
-// },
+    tab.appendChild(fileIcon);
+    tab.appendChild(name);
+    tab.appendChild(moreIcon);
+    parent.appendChild(tab);
+    // fs.push(entry);
+
+    // Directory
+    if (file?.kind === "directory") {
+        // const dir = document.createElement("span");
+
+        // fileIcon.dataset.d = entry.name;
+        // tab.classList.add("dir", "collapsed");
+
+        // parent.appendChild(dir);
+        
+        // getFiles(dir, entry.values(), padding + .375);
+    }
+    // File
+    else {
+        fileIcon.dataset.e = (file.name.match(/(?<=\.)[^. ]+$/) || [""])[0];
+    }
+},
 
 // // Open file
 // openFile = (id, fileName) => {
@@ -45,7 +64,7 @@ const unsaved = () => {
 //     tab = $("#tabs ." + id);
 
 //     if (!id) {
-//         id = "id-" + idIndex++;
+//         id = "id-" + idx++;
 //     }
 
 //     // --- Main ---
@@ -70,47 +89,77 @@ const unsaved = () => {
 //     main.classList.add("active");
 // },
 
-// Get files from file system
-getFiles = async (parent, entries) => {
-    for await (const entry of entries) {
-        parent.push(entry);
 
-        if (entry.kind === "directory") {
-            entry.children = [];
-            getFiles(entry.children, entry.values());
-        }
+// Open file
+openFile = (index, fileName) => {
+    tab.classList.remove("open");
+    main.classList.remove("open");
+
+    main = $("main." + index),
+    tab = $("#tabs ." + index);
+
+    if (!index) {
+        return console.log("no index (todo: fix)");
+        // id = "id-" + idx++;
     }
+
+    // --- Main ---
+    if (!main) {
+        main = template.cloneNode(true);
+        main.classList.add(index);
+        body.appendChild(main);
+        // TODO: textarea value
+
+        console.log(fs[Number(index.substring(4))]);
+    }
+
+    // Focus textarea
+    code = main.firstElementChild;
+    code.focus();
+    code.addEventListener("keyup", unsaved);
+
+    // --- Tabs ---
+    if (!tab) {
+        createTab(index, { name: fileName || "Untitled"}, tabs);
+    }
+
+    tab.classList.add("open");
+    main.classList.add("open");
 },
 
-// Show files/directories in menu
-displayFiles = (parent, entries) => {
-    for (const entry of entries) {
-        const icon = document.createElement("span"),
-              name = document.createElement("div");
+// Get files and directories from file system // TODO: marge with createTab()
+getFiles = async (parent, entries, padding) => {
+    for await (const entry of entries) {
+        const fileIcon = document.createElement("div"),
+              name = document.createElement("div"),
+              moreIcon = document.createElement("div");
                 
         tab = document.createElement("button");
-        // tab.classList.add("id-" + idIndex++);
+        tab.classList.add("idx-" + idx++, "tab");
+        tab.style.paddingLeft = padding + "rem";
 
         name.innerHTML = entry.name;
         
-        tab.appendChild(icon);
+        tab.appendChild(fileIcon);
         tab.appendChild(name);
-        
+        tab.appendChild(moreIcon);
+        parent.appendChild(tab);
+        fs.push(entry);
+
+        // Directory
         if (entry.kind === "directory") {
-            const dir = document.createElement("div");
+            const dir = document.createElement("span");
 
-            dir.classList = "directory";
+            fileIcon.dataset.d = entry.name;
             tab.classList.add("dir", "collapsed");
-            icon.dataset.d = entry.name;
 
-            dir.appendChild(tab);
             parent.appendChild(dir);
-
-            displayFiles(tab, entry.children);
+            
+            getFiles(dir, entry.values(), padding + .375);
         }
+        // File
         else {
-            icon.dataset.e = (entry.name.match(/(?<=\.)[^. ]+$/) || [""])[0];
-            parent.appendChild(tab);
+            fileIcon.dataset.e = (entry.name.match(/(?<=\.)[^. ]+$/) || [""])[0];
         }
     }
 };
@@ -142,24 +191,25 @@ displayFiles = (parent, entries) => {
 
 // Open file from menu
 menu.addEventListener("click", ev => {
-    const target = ev.target,
-          tag = target.tagName,
-          child = target.firstChild;
+    const btn = ev.target,
+          tag = btn.tagName;
 
-    if (tag === "MENU") return;
-
+    // No file selected
+    if (tag === "MENU") {
+        return;
+    }
     // Show more options
-    if (tag === "DIV") {
-        console.log("TODO: show more options");
+    else if (tag === "DIV") {
+        return console.log("TODO: show more options");
     }
     // Open/Close directory
-    else if (target.classList.contains("dir")) {
-        target.classList.toggle("collapsed");
-        // [child, target.parentNode].forEach(e => e.classList.toggle("open"));
+    else if (btn.classList.contains("dir")) {
+        btn.classList.toggle("collapsed");
     }
     // Open file
     else {
-        console.log("TODO: open file from menu");
+        console.log("TODO: open file from menu", btn);
+        openFile(btn.classList[0], btn.querySelector(":nth-child(2)").innerHTML);
         // openFile(target.classList[0], target.lastChild.innerHTML);
     }
 });
@@ -180,15 +230,9 @@ menu.addEventListener("click", ev => {
 $("#testdir").addEventListener("click", async () => {
     handle = await window.showDirectoryPicker({id: "dir"});
 
-    getFiles(fs, handle.values()).then(() => {
-        fs = fs.sort((a, b) => a.kind.localeCompare(b.kind));
-        displayFiles(menu, fs);
-    });
+    getFiles(menu, handle.values(), .1875);
+    // fs = fs.sort((a, b) => a.kind.localeCompare(b.kind));    
 });
-
-
-
-
 
 
 
