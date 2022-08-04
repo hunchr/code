@@ -20,15 +20,49 @@ const unsaved = () => {
     code.removeEventListener("keyup", unsaved);
 },
 
+// // Create tab // TODO
+// createTab = (id, file, parent) => {
+//     const fileIcon = document.createElement("div"),
+//           name = document.createElement("div"),
+//           moreIcon = document.createElement("div");
+
+//     tab = document.createElement("button");
+//     tab.classList.add(id, "tab");
+//     // tab.style.paddingLeft = padding + "rem";
+
+//     name.innerHTML = file.name;
+    
+//     tab.appendChild(fileIcon);
+//     tab.appendChild(name);
+//     tab.appendChild(moreIcon);
+//     parent.appendChild(tab);
+//     // fs.push(entry);
+
+//     // Directory
+//     if (file?.kind === "directory") {
+//         // const dir = document.createElement("span");
+
+//         // fileIcon.dataset.d = entry.name;
+//         // tab.classList.add("dir", "collapsed");
+
+//         // parent.appendChild(dir);
+        
+//         // getFiles(dir, entry.values(), padding + .375);
+//     }
+//     // File
+//     else {
+//         fileIcon.dataset.e = (file.name.match(/(?<=\.)[^. ]+$/) || [""])[0];
+//     }
+// },
+
 // Create tab // TODO
-createTab = (id, file, parent) => {
+createTab = (parent, id, file, entries, padding) => {
     const fileIcon = document.createElement("div"),
           name = document.createElement("div"),
           moreIcon = document.createElement("div");
 
     tab = document.createElement("button");
     tab.classList.add(id, "tab");
-    // tab.style.paddingLeft = padding + "rem";
 
     name.innerHTML = file.name;
     
@@ -36,16 +70,17 @@ createTab = (id, file, parent) => {
     tab.appendChild(name);
     tab.appendChild(moreIcon);
     parent.appendChild(tab);
-    // fs.push(entry);
 
-    // Directory
-    if (file?.kind === "directory") {
-        // const dir = document.createElement("span");
+    // Directory //TODO: ???
+    if (entries) {
+        const dir = document.createElement("span");
 
-        // fileIcon.dataset.d = entry.name;
-        // tab.classList.add("dir", "collapsed");
+        fileIcon.dataset.d = file.name;
+        tab.style.paddingLeft = padding + "rem";
+        tab.classList.add("dir", "collapsed");
 
-        // parent.appendChild(dir);
+        parent.appendChild(dir);
+        fs.push(file);
         
         // getFiles(dir, entry.values(), padding + .375);
     }
@@ -54,6 +89,7 @@ createTab = (id, file, parent) => {
         fileIcon.dataset.e = (file.name.match(/(?<=\.)[^. ]+$/) || [""])[0];
     }
 },
+
 
 // // Open file
 // openFile = (id, fileName) => {
@@ -120,7 +156,7 @@ openFile = (index, fileName) => {
 
     // --- Tabs ---
     if (!tab) {
-        createTab(index, { name: fileName || "Untitled"}, tabs);
+        createTab(tabs, index, { name: fileName || "Untitled"});
     }
 
     tab.classList.add("open");
@@ -130,39 +166,63 @@ openFile = (index, fileName) => {
 // Get files and directories from file system // TODO: marge with createTab()
 getFiles = async (parent, entries, padding) => {
     for await (const entry of entries) {
-        const fileIcon = document.createElement("div"),
-              name = document.createElement("div"),
-              moreIcon = document.createElement("div");
-                
-        tab = document.createElement("button");
-        tab.classList.add("idx-" + idx++, "tab");
-        tab.style.paddingLeft = padding + "rem";
-
-        name.innerHTML = entry.name;
-        
-        tab.appendChild(fileIcon);
-        tab.appendChild(name);
-        tab.appendChild(moreIcon);
-        parent.appendChild(tab);
-        fs.push(entry);
-
         // Directory
         if (entry.kind === "directory") {
-            const dir = document.createElement("span");
+            console.log("todo: dir");
 
-            fileIcon.dataset.d = entry.name;
-            tab.classList.add("dir", "collapsed");
+            createTab(parent, idx++, entry);
 
-            parent.appendChild(dir);
-            
-            getFiles(dir, entry.values(), padding + .375);
+            // tab.classList.add("dir", "collapsed");
+            // tab.style.paddingLeft = padding + "rem";
+            // fs.push(entry);
+
+            // getFiles(dir, entry.values(), padding + .375);
         }
         // File
         else {
-            fileIcon.dataset.e = (entry.name.match(/(?<=\.)[^. ]+$/) || [""])[0];
+            createTab(parent, idx++, entry);
         }
     }
 };
+
+
+
+// // Get files and directories from file system // TODO: marge with createTab()
+// getFiles = async (parent, entries, padding) => {
+//     for await (const entry of entries) {
+//         const fileIcon = document.createElement("div"),
+//               name = document.createElement("div"),
+//               moreIcon = document.createElement("div");
+                
+//         tab = document.createElement("button");
+//         tab.classList.add("idx-" + idx++, "tab");
+//         tab.style.paddingLeft = padding + "rem";
+
+//         name.innerHTML = entry.name;
+        
+//         tab.appendChild(fileIcon);
+//         tab.appendChild(name);
+//         tab.appendChild(moreIcon);
+//         parent.appendChild(tab);
+//         fs.push(entry);
+
+//         // Directory
+//         if (entry.kind === "directory") {
+//             const dir = document.createElement("span");
+
+//             fileIcon.dataset.d = entry.name;
+//             tab.classList.add("dir", "collapsed");
+
+//             parent.appendChild(dir);
+            
+//             getFiles(dir, entry.values(), padding + .375);
+//         }
+//         // File
+//         else {
+//             fileIcon.dataset.e = (entry.name.match(/(?<=\.)[^. ]+$/) || [""])[0];
+//         }
+//     }
+// };
 
 // // Open/Close tabs
 // tabs.addEventListener("click", ev => {
