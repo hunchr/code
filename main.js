@@ -3,13 +3,13 @@ const $ = e => document.querySelector(e),
       wait = async ms => await new Promise(res => setTimeout(res, ms)),
       body = document.body,
       template = $("main"),
-      welcomePage = $("#welcome"),
+      startPage = $("#welcome"),
       menu = $("menu"),
       tabs = $("#tabs");
 
 let handle,
     idx = 0,
-    main = welcomePage,
+    main = startPage,
     tab = main,
     code,
     fs = [];
@@ -20,43 +20,8 @@ const unsaved = () => {
     code.removeEventListener("keyup", unsaved);
 },
 
-// // Create tab // TODO
-// createTab = (id, file, parent) => {
-//     const fileIcon = document.createElement("div"),
-//           name = document.createElement("div"),
-//           moreIcon = document.createElement("div");
-
-//     tab = document.createElement("button");
-//     tab.classList.add(id, "tab");
-//     // tab.style.paddingLeft = padding + "rem";
-
-//     name.innerHTML = file.name;
-    
-//     tab.appendChild(fileIcon);
-//     tab.appendChild(name);
-//     tab.appendChild(moreIcon);
-//     parent.appendChild(tab);
-//     // fs.push(entry);
-
-//     // Directory
-//     if (file?.kind === "directory") {
-//         // const dir = document.createElement("span");
-
-//         // fileIcon.dataset.d = entry.name;
-//         // tab.classList.add("dir", "collapsed");
-
-//         // parent.appendChild(dir);
-        
-//         // getFiles(dir, entry.values(), padding + .375);
-//     }
-//     // File
-//     else {
-//         fileIcon.dataset.e = (file.name.match(/(?<=\.)[^. ]+$/) || [""])[0];
-//     }
-// },
-
-// Create tab // TODO
-createTab = (parent, id, file, entries, padding) => {
+// Create tab
+createTab = (parent, id, file, padding) => {
     const fileIcon = document.createElement("div"),
           name = document.createElement("div"),
           moreIcon = document.createElement("div");
@@ -71,18 +36,16 @@ createTab = (parent, id, file, entries, padding) => {
     tab.appendChild(moreIcon);
     parent.appendChild(tab);
 
-    // Directory //TODO: ???
-    if (entries) {
+    // Directory
+    if (padding) {
         const dir = document.createElement("span");
 
         fileIcon.dataset.d = file.name;
-        tab.style.paddingLeft = padding + "rem";
         tab.classList.add("dir", "collapsed");
 
         parent.appendChild(dir);
-        fs.push(file);
         
-        // getFiles(dir, entry.values(), padding + .375);
+        getFiles(dir, file.values(), padding + .375);
     }
     // File
     else {
@@ -90,164 +53,54 @@ createTab = (parent, id, file, entries, padding) => {
     }
 },
 
-
-// // Open file
-// openFile = (id, fileName) => {
-//     tab.classList.remove("active");
-//     main.classList.remove("active");
-
-//     main = $("main." + id),
-//     tab = $("#tabs ." + id);
-
-//     if (!id) {
-//         id = "id-" + idx++;
-//     }
-
-//     // --- Main ---
-//     if (!main) {
-//         main = template.cloneNode(true);
-//         main.classList.add(id);
-//         body.appendChild(main);
-//         // TODO: textarea value
-//     }
-
-//     // Focus textarea
-//     code = main.firstElementChild;
-//     code.focus();
-//     code.addEventListener("keyup", unsaved);
-
-//     // --- Tabs ---
-//     if (!tab) {
-//         createTab(id, fileName || "Untitled", tabs);
-//     }
-
-//     tab.classList.add("active");
-//     main.classList.add("active");
-// },
-
+// Get files and directories from file system
+getFiles = async (parent, entries, padding) => {
+    for await (const entry of entries) {
+        fs.push(entry);
+        createTab(parent, "idx-" + idx++, entry, entry.kind === "directory" ? padding : false);
+        tab.style.paddingLeft = padding + "rem";
+    }
+},
 
 // Open file
 openFile = (index, fileName) => {
     tab.classList.remove("open");
     main.classList.remove("open");
 
-    main = $("main." + index),
     tab = $("#tabs ." + index);
+    main = $("main." + index);
+    code = main?.firstElementChild;
 
+    // Set index
     if (!index) {
-        return console.log("no index (todo: fix)");
-        // id = "id-" + idx++;
+        index = "idx-" + idx++;
     }
 
-    // --- Main ---
-    if (!main) {
-        main = template.cloneNode(true);
-        main.classList.add(index);
-        body.appendChild(main);
-        // TODO: textarea value
-
-        console.log(fs[Number(index.substring(4))]);
-    }
-
-    // Focus textarea
-    code = main.firstElementChild;
-    code.focus();
-    code.addEventListener("keyup", unsaved);
-
-    // --- Tabs ---
+    // Create tab if needed
     if (!tab) {
         createTab(tabs, index, { name: fileName || "Untitled"});
     }
 
+    // Create main if needed
+    if (!main) {
+        main = template.cloneNode(true);
+        main.classList.add(index);
+        body.appendChild(main);
+        
+        code = main.firstElementChild;
+        code.addEventListener("keydown", keyboardShortcuts);
+
+        // TODO: textarea value
+        // console.log(fs[Number(index.substring(4))]);
+    }
+
+    // Focus textarea
+    code.focus();
+    code.addEventListener("keyup", unsaved);
+
     tab.classList.add("open");
     main.classList.add("open");
-},
-
-// Get files and directories from file system // TODO: marge with createTab()
-getFiles = async (parent, entries, padding) => {
-    for await (const entry of entries) {
-        // Directory
-        if (entry.kind === "directory") {
-            console.log("todo: dir");
-
-            createTab(parent, idx++, entry);
-
-            // tab.classList.add("dir", "collapsed");
-            // tab.style.paddingLeft = padding + "rem";
-            // fs.push(entry);
-
-            // getFiles(dir, entry.values(), padding + .375);
-        }
-        // File
-        else {
-            createTab(parent, idx++, entry);
-        }
-    }
 };
-
-
-
-// // Get files and directories from file system // TODO: marge with createTab()
-// getFiles = async (parent, entries, padding) => {
-//     for await (const entry of entries) {
-//         const fileIcon = document.createElement("div"),
-//               name = document.createElement("div"),
-//               moreIcon = document.createElement("div");
-                
-//         tab = document.createElement("button");
-//         tab.classList.add("idx-" + idx++, "tab");
-//         tab.style.paddingLeft = padding + "rem";
-
-//         name.innerHTML = entry.name;
-        
-//         tab.appendChild(fileIcon);
-//         tab.appendChild(name);
-//         tab.appendChild(moreIcon);
-//         parent.appendChild(tab);
-//         fs.push(entry);
-
-//         // Directory
-//         if (entry.kind === "directory") {
-//             const dir = document.createElement("span");
-
-//             fileIcon.dataset.d = entry.name;
-//             tab.classList.add("dir", "collapsed");
-
-//             parent.appendChild(dir);
-            
-//             getFiles(dir, entry.values(), padding + .375);
-//         }
-//         // File
-//         else {
-//             fileIcon.dataset.e = (entry.name.match(/(?<=\.)[^. ]+$/) || [""])[0];
-//         }
-//     }
-// };
-
-// // Open/Close tabs
-// tabs.addEventListener("click", ev => {
-//     const target = ev.target;
-
-//     // Open file
-//     if (target.tagName === "BUTTON") {
-//         openFile(target.classList[0]);
-//     }
-//     // Close file
-//     else {
-//         const sibling = tab.nextElementSibling || tab.previousElementSibling;
-
-//         tab.remove();
-//         main.classList.remove("active");
-
-//         if (sibling) {
-//             openFile(sibling.classList[0]);
-//         }
-//         else {
-//             tab = main = welcomePage;
-//             welcomePage.classList.add("active");
-//         }
-//     }
-// });
 
 // Open file from menu
 menu.addEventListener("click", ev => {
@@ -259,149 +112,89 @@ menu.addEventListener("click", ev => {
         return;
     }
     // Show more options
-    else if (tag === "DIV") {
+    if (tag === "DIV") {
         return console.log("TODO: show more options");
     }
     // Open/Close directory
-    else if (btn.classList.contains("dir")) {
-        btn.classList.toggle("collapsed");
+    if (btn.classList.contains("dir")) {
+        return btn.classList.toggle("collapsed");
     }
+
     // Open file
-    else {
-        console.log("TODO: open file from menu", btn);
-        openFile(btn.classList[0], btn.querySelector(":nth-child(2)").innerHTML);
-        // openFile(target.classList[0], target.lastChild.innerHTML);
-    }
+    openFile(btn.classList[0], btn.querySelector(":nth-child(2)").innerHTML);
 });
 
-// ----- Keyboard shortcuts -----
+// Open/Close tab
+tabs.addEventListener("click", ev => {
+    const target = ev.target;
+
+    // No tab selected
+    if (target.id === "tabs") {
+        return;
+    }
+    // Open file
+    if (target.tagName === "BUTTON") {
+        return openFile(target.classList[0]);
+    }
+
+    // --- Close file --- // TODO: alert: save changes?
+    const sibling = tab.nextElementSibling || tab.previousElementSibling;
+
+    tab.remove();
+    main.classList.remove("open");
+
+    if (sibling) {
+        return openFile(sibling.classList[0]);
+    }
+    
+    // Show start page if no tabs are open
+    tab = main = startPage;
+    startPage.classList.add("open");
+});
+
+// ----- Functions -----
 // Open file
-// $("#testfile").addEventListener("click", async () => {
-//     [handle] = await window.showOpenFilePicker({id: "file"});
+$("#testfile").addEventListener("click", async () => {
+    // Get file
+    try {
+        [handle] = await window.showOpenFilePicker({id: "file"});
+    }
+    catch {
+        return;
+    }
 
-//     const file = await handle.getFile(),
-//           data = await file.text();
+    const file = await handle.getFile();
 
-//     openFile(null, file.name);
-//     code.value = data;
-// });
+    fs.push(file);
+    openFile(null, file.name);
+});
 
 // Open directory
 $("#testdir").addEventListener("click", async () => {
-    handle = await window.showDirectoryPicker({id: "dir"});
+    // Get directory
+    try {
+        handle = await window.showDirectoryPicker({id: "dir"});
+    }
+    catch {
+        return;
+    }
 
+    // Reset everything
+    fs = [];
+    idx = 0;
+    tabs.innerHTML = "";
+    menu.innerHTML = "";
+
+    // Remove all textareas
+    document.querySelectorAll("main:not(#welcome, :first-of-type)").forEach(e => {
+        e.remove();
+    });
+
+    // Show start page
+    tab = main = startPage;
+    startPage.classList.add("open");
+
+    // Open directory
     getFiles(menu, handle.values(), .1875);
-    // fs = fs.sort((a, b) => a.kind.localeCompare(b.kind));    
+    // TODO: sort: fs = fs.sort((a, b) => a.kind.localeCompare(b.kind))
 });
-
-
-
-
-// ----------------------------------------------
-// let keyChr = "";
-    //   nav = $("nav");
-    //   code = $("code"),
-    //   ta = $("textarea"),
-
-// Keyboard shortcuts [alt+key]
-// shortcut = key => {
-//     console.log(`[alt+${key}]`); // TODO
-// };
-
-// Detect keyboard shortcuts
-// ta.addEventListener("keydown", ev => {
-//     if (ev.altKey) {
-//         const key = ev.key;
-//         ev.preventDefault();
-//         if (key.length === 1) shortcut(key);
-//     }
-// });
-
-// Key listener
-// ta.addEventListener("keypress", ev => {
-//     const key = ev.key,
-//           idx = ta.selectionStart,
-//           div = document.createElement("div");
-
-//     div.innerHTML = key;
-//     div.dataset.i = idx;
-
-//     // Newline
-//     if (key === "Enter") {
-//         div.classList = "ln";
-//     }
-
-//     console.log(
-//         idx,
-//         // $(`code [data-i="${idx}"]`)
-//     );
-
-//     // console.log(ta.selectionStart);
-    
-//     return code.appendChild(div);
-
-//     // if (ev.altKey) return shortcut(key);
-
-//     // keyCount += 1;
-
-//     // console.log(ev, key);
-
-    
-//     // if (key === "Alt") {
-//     //     ev.preventDefault();
-//     //     // isAlt = true;
-//     // }
-
-//     // keyCount += 1;
-//     // keyChr += key;
-
-//     // console.log(keyCount);
-
-
-
-//     // // Newline [enter]
-//     // if (key === "Enter") {
-//     //     const line = document.createElement("div");
-//     //     line.innerHTML = ++ln;
-//     //     return lines.appendChild(line);
-//     // }
-
-//     // // Delete [Backspace]
-//     // if (key === "Backspace") {
-//     //     if (ta.value[ta.selectionStart - 1] === "\n") {
-//     //         lines.lastChild.remove();
-//     //         return --ln;
-//     //     }
-//     // }
-
-//     // // Delete [Delete]
-//     // if (key === "Delete") {
-//     //     if (ta.value[ta.selectionStart] === "\n") {
-//     //         lines.lastChild.remove();
-//     //         return --ln;
-//     //     }
-//     // }
-// });
-
-// ta.addEventListener("keydown", ev => {
-//     const key = ev.key;
-
-//     if (ev.altKey) {
-//         ev.preventDefault();
-//         if (key === "Alt") return;
-//         keyChr += "+" + key;
-//         // console.log(`[alt+${key}]`);
-//     }
-
-//     // // keyCount -= 1;
-//     // console.log(key, keyCount);
-// });
-
-// ta.addEventListener("keyup", ev => {
-//     if (ev.key === "Alt") {
-//         console.log(`[${keyChr.substring(1)}]`);
-//         keyChr = "";
-//     }
-//     // const key = ev.key;
-//     // keyCount -= 1;
-// });
