@@ -28,7 +28,7 @@
 }
 
 ::selection {
-    /* color: var(--white); */
+    color: var(--white);
     background-color: var(--blue);
 }
 
@@ -305,6 +305,7 @@ main {
 code,
 textarea {
     white-space: pre;
+    tab-size: 4;
     width: 100%;
     height: 100%;
     /* padding: 4rem 4rem calc(100vh - 5.125rem) 4rem; */

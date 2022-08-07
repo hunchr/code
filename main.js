@@ -88,7 +88,7 @@ openFile = (index, fileName) => {
         body.appendChild(main);
         
         code = main.firstElementChild;
-        code.addEventListener("keydown", keyboardShortcuts);
+        code.addEventListener("keydown", keyListener);
 
         // TODO: textarea value
         // console.log(fs[Number(index.substring(4))]);
